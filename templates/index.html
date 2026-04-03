@@ -1,0 +1,694 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lekhan P Simha — Software Engineer & Full Stack Developer based in Bangalore, India. Building scalable, high-impact systems.">
+  <meta name="keywords" content="Software Engineer, Full Stack Developer, Python, Django, Bangalore, Portfolio">
+  <meta property="og:title" content="Lekhan P Simha — Software Engineer">
+  <meta property="og:description" content="I don't just write code — I engineer scalable, high-impact systems that solve real-world problems.">
+  <title>Lekhan P Simha — Galactic Portfolio</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-glow" id="cursor"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- Three.js Canvas -->
+  <canvas id="galaxy-canvas"></canvas>
+
+  <!-- Rocket / Spaceship -->
+  <div class="spaceship" id="spaceship">
+    <svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="rocketGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#00f5ff"/>
+          <stop offset="100%" style="stop-color:#7b2fff"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="30" cy="30" rx="12" ry="28" fill="url(#rocketGrad)" opacity="0.9"/>
+      <polygon points="30,0 18,20 42,20" fill="#00f5ff" opacity="0.8"/>
+      <ellipse cx="30" cy="26" rx="5" ry="7" fill="#0a0a1a" opacity="0.9"/>
+      <ellipse cx="30" cy="25" rx="3" ry="5" fill="#00f5ff" opacity="0.6"/>
+      <polygon points="18,48 10,62 22,54" fill="#7b2fff" opacity="0.7"/>
+      <polygon points="42,48 50,62 38,54" fill="#7b2fff" opacity="0.7"/>
+      <ellipse cx="30" cy="58" rx="8" ry="14" fill="#ff6b00" opacity="0.5" class="flame"/>
+      <ellipse cx="30" cy="62" rx="4" ry="10" fill="#ffcc00" opacity="0.7" class="flame-inner"/>
+    </svg>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">
+      <span class="logo-text">LPS</span>
+      <div class="logo-dot"></div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#hero" data-nav="hero">Mission</a></li>
+      <li><a href="#skills" data-nav="skills">Arsenal</a></li>
+      <li><a href="#projects" data-nav="projects">Launches</a></li>
+      <li><a href="#experience" data-nav="experience">Orbit</a></li>
+      <li><a href="#contact" data-nav="contact">Transmit</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Hire Me</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ====================================================
+       SECTION 1: HERO — THE LAUNCHPAD
+  ===================================================== -->
+  <section class="section hero-section" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Available for opportunities</span>
+      </div>
+      <div class="hero-title-wrapper">
+        <h1 class="hero-name">
+          <span class="name-line" id="name-line-1">LEKHAN</span>
+          <span class="name-line accent" id="name-line-2">P SIMHA</span>
+        </h1>
+        <div class="hero-role">
+          <span class="role-prefix">Software Engineer</span>
+          <div class="role-separator"></div>
+          <span class="role-typed" id="typed-text"></span>
+          <span class="cursor-blink">|</span>
+        </div>
+      </div>
+      <p class="hero-tagline" id="hero-tagline">
+        I don't just write code —<br>
+        <strong>I engineer scalable, high-impact systems</strong><br>
+        that solve real-world problems.
+      </p>
+      <div class="hero-location">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span>Bangalore, India</span>
+        <span class="divider">·</span>
+        <span>lekhansimhap@gmail.com</span>
+      </div>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn-primary">
+          <span>Explore My Work</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+        <a href="#contact" class="btn-secondary">
+          <span>Hire Me</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" data-target="0">0</span><span class="stat-sym">+</span>
+          <span class="stat-label">Years Exp</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-target="5">0</span><span class="stat-sym">+</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-target="5">0</span><span class="stat-sym">+</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll to explore the galaxy</span>
+      <div class="scroll-arrow">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <!-- Planet decoration -->
+    <div class="hero-planet" id="hero-planet"></div>
+  </section>
+
+  <!-- ====================================================
+       SECTION 2: SKILLS — THE ARSENAL
+  ===================================================== -->
+  <section class="section skills-section" id="skills">
+    <div class="section-header">
+      <div class="section-tag">02 / Engineering Arsenal</div>
+      <h2 class="section-title">Core <span class="accent-text">Skills</span></h2>
+      <p class="section-sub">Battle-tested tools I use to engineer real solutions</p>
+    </div>
+    <div class="skills-universe">
+      <div class="skill-galaxy" data-group="languages">
+        <div class="galaxy-label">Languages & Core</div>
+        <div class="skill-orbit">
+          <div class="skill-badge" data-skill="Python" style="--delay:0s"><span class="badge-icon">🐍</span><span>Python</span></div>
+          <div class="skill-badge" data-skill="Java" style="--delay:0.1s"><span class="badge-icon">☕</span><span>Java</span></div>
+          <div class="skill-badge" data-skill="C#" style="--delay:0.2s"><span class="badge-icon">#</span><span>C#</span></div>
+          <div class="skill-badge" data-skill="SQL" style="--delay:0.3s"><span class="badge-icon">🗄</span><span>SQL</span></div>
+        </div>
+      </div>
+      <div class="skill-galaxy" data-group="backend">
+        <div class="galaxy-label">Backend & Systems</div>
+        <div class="skill-orbit">
+          <div class="skill-badge" data-skill="Django" style="--delay:0s"><span class="badge-icon">🌐</span><span>Django</span></div>
+          <div class="skill-badge" data-skill="REST APIs" style="--delay:0.1s"><span class="badge-icon">⚡</span><span>REST APIs</span></div>
+          <div class="skill-badge" data-skill="ASP.NET" style="--delay:0.2s"><span class="badge-icon">🔷</span><span>ASP.NET</span></div>
+          <div class="skill-badge" data-skill="MySQL" style="--delay:0.3s"><span class="badge-icon">🐬</span><span>MySQL</span></div>
+          <div class="skill-badge" data-skill="SQLite" style="--delay:0.4s"><span class="badge-icon">💾</span><span>SQLite</span></div>
+        </div>
+      </div>
+      <div class="skill-galaxy" data-group="data">
+        <div class="galaxy-label">Data & Analysis</div>
+        <div class="skill-orbit">
+          <div class="skill-badge" data-skill="Pandas" style="--delay:0s"><span class="badge-icon">🐼</span><span>Pandas</span></div>
+          <div class="skill-badge" data-skill="NumPy" style="--delay:0.1s"><span class="badge-icon">🔢</span><span>NumPy</span></div>
+          <div class="skill-badge" data-skill="Matplotlib" style="--delay:0.2s"><span class="badge-icon">📊</span><span>Matplotlib</span></div>
+          <div class="skill-badge" data-skill="Seaborn" style="--delay:0.3s"><span class="badge-icon">🎨</span><span>Seaborn</span></div>
+        </div>
+      </div>
+      <div class="skill-galaxy" data-group="cs">
+        <div class="galaxy-label">CS Foundations</div>
+        <div class="skill-orbit">
+          <div class="skill-badge" data-skill="DSA" style="--delay:0s"><span class="badge-icon">🌲</span><span>DSA</span></div>
+          <div class="skill-badge" data-skill="OOP" style="--delay:0.1s"><span class="badge-icon">🏛</span><span>OOP</span></div>
+          <div class="skill-badge" data-skill="DBMS" style="--delay:0.2s"><span class="badge-icon">📚</span><span>DBMS</span></div>
+          <div class="skill-badge" data-skill="OS" style="--delay:0.3s"><span class="badge-icon">💻</span><span>OS</span></div>
+        </div>
+      </div>
+      <div class="skill-galaxy" data-group="tools">
+        <div class="galaxy-label">Tools & Automation</div>
+        <div class="skill-orbit">
+          <div class="skill-badge" data-skill="Selenium" style="--delay:0s"><span class="badge-icon">🤖</span><span>Selenium</span></div>
+          <div class="skill-badge" data-skill="Pytest" style="--delay:0.1s"><span class="badge-icon">✅</span><span>Pytest</span></div>
+          <div class="skill-badge" data-skill="Git" style="--delay:0.2s"><span class="badge-icon">🔀</span><span>Git</span></div>
+          <div class="skill-badge" data-skill="Linux" style="--delay:0.3s"><span class="badge-icon">🐧</span><span>Linux</span></div>
+          <div class="skill-badge" data-skill="JSON/YAML" style="--delay:0.4s"><span class="badge-icon">📄</span><span>JSON/YAML</span></div>
+        </div>
+      </div>
+      <div class="skill-galaxy" data-group="ai">
+        <div class="galaxy-label">AI & Deep Learning</div>
+        <div class="skill-orbit">
+          <div class="skill-badge" data-skill="Deep Learning" style="--delay:0s"><span class="badge-icon">🧠</span><span>Deep Learning</span></div>
+          <div class="skill-badge" data-skill="Face Recognition" style="--delay:0.1s"><span class="badge-icon">👁</span><span>Face Recog.</span></div>
+          <div class="skill-badge" data-skill="OpenCV" style="--delay:0.2s"><span class="badge-icon">📷</span><span>OpenCV</span></div>
+          <div class="skill-badge" data-skill="Cloud" style="--delay:0.3s"><span class="badge-icon">☁</span><span>Cloud</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION 3: PROJECTS — FLAGSHIP LAUNCHES
+  ===================================================== -->
+  <section class="section projects-section" id="projects">
+    <div class="section-header">
+      <div class="section-tag">03 / Flagship Launches</div>
+      <h2 class="section-title">Projects <span class="accent-text">Built</span></h2>
+      <p class="section-sub">Not just studied — engineered, deployed, and impactful</p>
+    </div>
+    <div class="projects-grid">
+
+      <!-- Project 1: Online Voting System -->
+      <div class="project-card" data-index="0">
+        <div class="card-glow"></div>
+        <div class="card-header">
+          <div class="card-category">AI / Security</div>
+          <div class="card-accent-line"></div>
+        </div>
+        <div class="card-body">
+          <div class="project-icon">🔐</div>
+          <h3 class="project-title">Online Voting System</h3>
+          <p class="project-desc">
+            Engineered a secure voting platform using Face Recognition (Haarcascade). Achieved 98% accuracy in identity validation with secure APIs ensuring integrity and fraud prevention.
+          </p>
+          <div class="project-metrics">
+            <div class="metric"><span class="metric-val">98%</span><span class="metric-lbl">Accuracy</span></div>
+            <div class="metric"><span class="metric-val">Low</span><span class="metric-lbl">Latency</span></div>
+            <div class="metric"><span class="metric-val">Zero</span><span class="metric-lbl">Fraud</span></div>
+          </div>
+          <div class="tech-stack">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">OpenCV</span>
+            <span class="tech-tag">Haarcascade</span>
+            <span class="tech-tag">Face Recognition</span>
+            <span class="tech-tag">REST API</span>
+          </div>
+        </div>
+        <!-- <div class="card-footer">
+          <a href="#" class="card-link github-link" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="#" class="card-link live-link" title="Live Demo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>Live Demo</span>
+          </a>
+        </div> -->
+      </div>
+
+      <!-- Project 2: Resort Management -->
+      <div class="project-card" data-index="1">
+        <div class="card-glow"></div>
+        <div class="card-header">
+          <div class="card-category">Full Stack</div>
+          <div class="card-accent-line"></div>
+        </div>
+        <div class="card-body">
+          <div class="project-icon">🏨</div>
+          <h3 class="project-title">Resort Management System</h3>
+          <p class="project-desc">
+            Robust backend system handling 100+ concurrent users with MySQL. Focused on data consistency, performance optimization, and 95% uptime reliability.
+          </p>
+          <div class="project-metrics">
+            <div class="metric"><span class="metric-val">100+</span><span class="metric-lbl">Users</span></div>
+            <div class="metric"><span class="metric-val">95%</span><span class="metric-lbl">Uptime</span></div>
+            <div class="metric"><span class="metric-val">Fast</span><span class="metric-lbl">Queries</span></div>
+          </div>
+          <div class="tech-stack">
+            <span class="tech-tag">Php</span>
+            <span class="tech-tag">MySQL</span>
+            <span class="tech-tag">REST APIs</span>
+            <span class="tech-tag">DBMS</span>
+          </div>
+        </div>
+        <!-- <div class="card-footer">
+          <a href="#" class="card-link github-link" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="#" class="card-link live-link" title="Live Demo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>Live Demo</span>
+          </a>
+        </div> -->
+      </div>
+
+      <!-- Project 3: Materials Management -->
+      <div class="project-card" data-index="2">
+        <div class="card-glow"></div>
+        <div class="card-header">
+          <div class="card-category">Backend / ERP</div>
+          <div class="card-accent-line"></div>
+        </div>
+        <div class="card-body">
+          <div class="project-icon">📦</div>
+          <h3 class="project-title">Materials Management System</h3>
+          <p class="project-desc">
+            Built with ASP.NET Core + Entity Framework Core. Real-time inventory tracking with scalable RESTful APIs enabling seamless data flow across modules.
+          </p>
+          <div class="project-metrics">
+            <div class="metric"><span class="metric-val">Real</span><span class="metric-lbl">-time</span></div>
+            <div class="metric"><span class="metric-val">Scale</span><span class="metric-lbl">Ready</span></div>
+            <div class="metric"><span class="metric-val">EF</span><span class="metric-lbl">Core</span></div>
+          </div>
+          <div class="tech-stack">
+            <span class="tech-tag">ASP.NET Core</span>
+            <span class="tech-tag">C#</span>
+            <span class="tech-tag">Entity Framework</span>
+            <span class="tech-tag">REST APIs</span>
+            <span class="tech-tag">SQL</span>
+          </div>
+        </div>
+        <!-- <div class="card-footer">
+          <a href="#" class="card-link github-link" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="#" class="card-link live-link" title="Live Demo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>Live Demo</span>
+          </a>
+        </div> -->
+      </div>
+
+      <!-- Dynamic projects from Django -->
+      {% for project in projects %}
+      <div class="project-card dynamic-project" data-index="{{ forloop.counter|add:2 }}">
+        <div class="card-glow"></div>
+        <div class="card-header">
+          <div class="card-category">{{ project.get_category_display }}</div>
+          <div class="card-accent-line"></div>
+        </div>
+        <div class="card-body">
+          <div class="project-icon">🚀</div>
+          <h3 class="project-title">{{ project.title }}</h3>
+          <p class="project-desc">{{ project.description }}</p>
+          <div class="tech-stack">
+            {% for tech in project.get_tech_list %}
+            <span class="tech-tag">{{ tech }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="card-footer">
+          {% if project.github_link %}
+          <a href="{{ project.github_link }}" class="card-link github-link" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          {% endif %}
+          {% if project.live_link %}
+          <a href="{{ project.live_link }}" class="card-link live-link" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>Live Demo</span>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION 4: EXPERIENCE — ORBIT
+  ===================================================== -->
+  <section class="section experience-section" id="experience">
+    <div class="section-header">
+      <div class="section-tag">04 / Orbit Experience</div>
+      <h2 class="section-title">Real-World <span class="accent-text">Impact</span></h2>
+      <p class="section-sub">Where I've been — and what I built there</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-item" data-side="left">
+        <div class="timeline-dot">
+          <div class="dot-inner"></div>
+          <div class="dot-ring"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">Feb/2025 — May/2025</div>
+          <div class="timeline-company">Gideon Garden Technologies</div>
+          <div class="timeline-role">QA Analyst</div>
+          <p class="timeline-desc">
+            Designed and executed 50+ test cases for the AYUSH-HMIS healthcare system. Automated workflows using Selenium + Pytest, reducing testing time by 40%.
+          </p>
+          <div class="timeline-tags">
+            <span>Selenium</span><span>Pytest</span><span>QA Automation</span><span>Healthcare</span>
+          </div>
+          <div class="timeline-impact">
+            <div class="impact-stat"><span class="i-val">50+</span> test cases</div>
+            <div class="impact-stat"><span class="i-val">40%</span> faster testing</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item" data-side="right">
+        <div class="timeline-dot">
+          <div class="dot-inner"></div>
+          <div class="dot-ring"></div>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-date">Oct/2025 — Dec/2025</div>
+          <div class="timeline-company">24/7.ai</div>
+          <div class="timeline-role">Digital Interaction Advisor</div>
+          <p class="timeline-desc">
+            Managed high-volume chat & email interactions. Improved response efficiency by 30% while strengthening problem-solving and communication under pressure.
+          </p>
+          <div class="timeline-tags">
+            <span>Customer Support</span><span>Communication</span><span>Problem-solving</span>
+          </div>
+          <div class="timeline-impact">
+            <div class="impact-stat"><span class="i-val">30%</span> response efficiency</div>
+            <div class="impact-stat"><span class="i-val">High</span> volume ops</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION 5: EDUCATION & CERTS
+  ===================================================== -->
+  <section class="section edu-section" id="education">
+    <div class="section-header">
+      <div class="section-tag">05 / Academic Trajectory</div>
+      <h2 class="section-title">Education & <span class="accent-text">Certs</span></h2>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card main-edu">
+        <div class="edu-icon">🎓</div>
+        <div class="edu-body">
+          <h3>BE — Information Science Engineering</h3>
+          <p class="edu-inst">SRI KRISHNA INSTITUTE OF TECHNOLOGY (VTU)</p>
+          <div class="edu-meta">
+            <span class="edu-grade">CGPA: 7.26</span>
+            <span class="edu-year">2021 — 2025</span>
+          </div>
+        </div>
+        <div class="edu-bar"><div class="edu-fill" style="width:72.6%"></div></div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">📘</div>
+        <div class="edu-body">
+          <h3>Pre-University (PUC)</h3>
+          <p class="edu-inst">Karnataka State Board</p>
+          <div class="edu-meta">
+            <span class="edu-grade">86%</span>
+            <span class="edu-year">2019 — 2021</span>
+          </div>
+        </div>
+        <div class="edu-bar"><div class="edu-fill" style="width:86%"></div></div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">📗</div>
+        <div class="edu-body">
+          <h3>10th Grade (CBSE)</h3>
+          <p class="edu-inst">CENTRAL BOARD OF SECONDARY EDUCATION</p>
+          <div class="edu-meta">
+            <span class="edu-grade">82%</span>
+            <span class="edu-year">2018 — 2019</span>
+          </div>
+        </div>
+        <div class="edu-bar"><div class="edu-fill" style="width:82%"></div></div>
+      </div>
+    </div>
+    <div class="certs-section">
+  <h3 class="certs-heading">Certifications</h3>
+  <div class="certs-grid">
+    
+    <div class="cert-badge">
+      <a href="https://www.mygreatlearning.com/certificate/EJCXHSIS" target="_blank">
+        <span class="cert-icon">🏅</span><span>Data Structures in C</span>
+      </a>
+    </div>
+
+    <div class="cert-badge">
+      <a href="https://simpli-web.app.link/e/FVuXFc54nWb" target="_blank">
+        <span class="cert-icon">☁️</span><span>Cloud Computing</span>
+      </a>
+    </div>
+
+    <div class="cert-badge">
+      <a href="https://www.mygreatlearning.com/certificate/SKKTLDZH" target="_blank">
+        <span class="cert-icon">🧠</span><span>Deep Learning</span>
+      </a>
+    </div>
+
+    <div class="cert-badge">
+      <a href="https://www.mygreatlearning.com/certificate/TKEXSGJF" target="_blank">
+        <span class="cert-icon">🐧</span><span>Linux</span>
+      </a>
+    </div>
+
+    <div class="cert-badge">
+      <a href="https://www.mygreatlearning.com/certificate/QUTCTCKM" target="_blank">
+        <span class="cert-icon">🏛</span><span>Object-Oriented Programming</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+    <!-- <div class="certs-section">
+      <h3 class="certs-heading">Certifications</h3>
+      <div class="certs-grid">
+        <div class="cert-badge"><span class="cert-icon">🏅</span><span>Data Structures in C</span></div>
+        <div class="cert-badge"><span class="cert-icon">☁️</span><span>Cloud Computing</span></div>
+        <div class="cert-badge"><span class="cert-icon">🧠</span><span>Deep Learning</span></div>
+        <div class="cert-badge"><span class="cert-icon">🐧</span><span>Linux</span></div>
+        <div class="cert-badge"><span class="cert-icon">🏛</span><span>Object-Oriented Programming</span></div>
+      </div>
+    </div> -->
+  </section>
+
+  <!-- ====================================================
+       SECTION 6: HUMAN SIDE
+  ===================================================== -->
+  <section class="section human-section" id="about">
+    <div class="section-header">
+      <div class="section-tag">06 / Beyond Code</div>
+      <h2 class="section-title">The <span class="accent-text">Human</span> Side</h2>
+      <p class="section-sub">A builder who thinks, feels, and creates beyond terminals</p>
+    </div>
+    <div class="human-grid">
+      <div class="human-card">
+        <div class="human-icon">✍️</div>
+        <h3>Wattpad Novelist</h3>
+        <p>Storytelling and creativity — I build worlds with words just as I build systems with code.</p>
+      </div>
+      <div class="human-card">
+        <div class="human-icon">🎵</div>
+        <h3>Singer</h3>
+        <p>Artistic expression through music — rhythm, timing, and harmony inform how I think about system design.</p>
+      </div>
+      <div class="human-card">
+        <div class="human-icon">🎮</div>
+        <h3>Esports Enthusiast</h3>
+        <p>Strategic thinking, rapid decision-making, and reflexes honed through competitive gaming.</p>
+      </div>
+    </div>
+    <div class="mission-block">
+      <div class="mission-quote">
+        <div class="quote-mark">"</div>
+        <p>I thrive in fast-paced environments where I can combine logic, creativity, and AI-assisted development to ship products that actually matter.</p>
+        <div class="quote-attribution">— Lekhan P Simha</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECTION 7: CONTACT — TRANSMIT
+  ===================================================== -->
+  <section class="section contact-section" id="contact">
+    <div class="section-header">
+      <div class="section-tag">07 / Transmit Signal</div>
+      <h2 class="section-title">Let's <span class="accent-text">Build</span> Together</h2>
+      <p class="section-sub">I'm ready. Are you looking for someone who combines strong fundamentals, real execution, and relentless curiosity?</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-info-item">
+          <div class="info-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="info-label">Location</div>
+            <div class="info-val">Bangalore, India</div>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="info-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div>
+            <div class="info-label">Email</div>
+            <a href="mailto:lekhansimhap@gmail.com" class="info-val info-link">lekhansimhap@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-info-item">
+          <div class="info-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.38 2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 5.55 5.55l1.41-1.41a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="info-label">Phone</div>
+            <a href="tel:+917483385511" class="info-val info-link">+91 7483385511</a>
+          </div>
+        </div>
+        <div class="contact-availability">
+          <div class="avail-dot"></div>
+          <span>Open to full-time roles, freelance, and collaborations</span>
+        </div>
+      </div>
+
+      <form class="contact-form" id="contactForm" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <div class="input-wrapper">
+            <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
+            <div class="input-border"></div>
+          </div>
+          <span class="field-error" id="name-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <div class="input-wrapper">
+            <input type="email" id="email" name="email" placeholder="john@company.com" required autocomplete="email">
+            <div class="input-border"></div>
+          </div>
+          <span class="field-error" id="email-error"></span>
+        </div>
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <div class="input-wrapper">
+            <textarea id="message" name="message" placeholder="Tell me about the project, role, or opportunity..." rows="5" required></textarea>
+            <div class="input-border"></div>
+          </div>
+          <span class="field-error" id="message-error"></span>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="btn-text">Transmit Signal</span>
+          <span class="btn-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </span>
+          <span class="btn-loader" id="btnLoader">
+            <svg class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+          </span>
+        </button>
+        <div class="form-response" id="formResponse"></div>
+      </form>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="final-cta">
+      <div class="cta-content">
+        <h3>I'm not looking to just join a company —</h3>
+        <p>I'm looking to <strong>build, scale, and create systems that matter.</strong></p>
+        <div class="cta-actions">
+          <a href="mailto:lekhansimhap@gmail.com" class="btn-primary">
+            <span>Send Email Directly</span>
+          </a>
+          <a href="tel:+917483385511" class="btn-outline">
+            <span>Call Now</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-logo">LPS <span>·</span> Lekhan P Simha</div>
+      <div class="footer-links">
+        <a href="#hero">Mission</a>
+        <a href="#skills">Arsenal</a>
+        <a href="#projects">Launches</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-copy">
+        © 2025 Lekhan P Simha. Engineered from Bangalore with 🚀
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
