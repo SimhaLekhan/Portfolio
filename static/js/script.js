@@ -807,6 +807,30 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
+// Hide scroll hint when at bottom of page
+const scrollHint = document.querySelector('.scroll-hint');
+
+function checkScrollHint() {
+  if (!scrollHint) return;
+  
+  const scrollPosition = window.scrollY + window.innerHeight;
+  const pageHeight = document.documentElement.scrollHeight;
+  const isAtBottom = scrollPosition >= pageHeight - 50; // 50px threshold
+  
+  if (isAtBottom) {
+    scrollHint.style.opacity = '0';
+    scrollHint.style.visibility = 'hidden';
+    scrollHint.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+  } else {
+    scrollHint.style.opacity = '0.8';
+    scrollHint.style.visibility = 'visible';
+  }
+}
+
+// Listen for scroll events
+window.addEventListener('scroll', checkScrollHint);
+// Check on page load
+window.addEventListener('load', checkScrollHint);
 // ============================================================
 // 15. PAGE LOAD COMPLETE
 // ============================================================
