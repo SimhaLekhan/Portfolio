@@ -5,7 +5,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .models import ContactMessage, Project
-
+from django.core.mail import send_mail
+from django.conf import settings
 
 def index(request):
     """Render the main portfolio homepage."""
@@ -63,6 +64,19 @@ def contact_api(request):
             ip_address=ip,
         )
 
+        # Send email notification
+        try:
+            send_mail(
+                subject=f"New Contact Form Submission from {name}",
+                message=f"Name: {name}\nEmail: {email}\nIP: {ip}\n\nMessage:\n{message}",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=['lekhansimhap@gmail.com'],
+                fail_silently=False,  # set True if you want errors not to break API
+            )
+        except Exception as e:
+            print(f"Email send failed: {e}")  # logs email failures
+
+        # Return success JSON
         return JsonResponse({
             'success': True,
             'message': 'Your message has been transmitted successfully! I will respond within 24 hours.',
@@ -72,6 +86,7 @@ def contact_api(request):
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'error': 'Invalid JSON payload.'}, status=400)
     except Exception as e:
+        print(f"Server error: {e}")  # log for debugging
         return JsonResponse({'success': False, 'error': 'Server error. Please try again.'}, status=500)
 
 
