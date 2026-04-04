@@ -587,11 +587,137 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 // ============================================================
 // 10. CONTACT FORM
 // ============================================================
-(function initContactForm() {
+// (function initContactForm() {
+//   const form = document.getElementById('contactForm');
+//   const submitBtn = document.getElementById('submitBtn');
+//   const responseEl = document.getElementById('formResponse');
+
+//   if (!form) return;
+
+//   function showFieldError(fieldId, msg) {
+//     const errEl = document.getElementById(fieldId + '-error');
+//     if (errEl) {
+//       errEl.textContent = msg;
+//       errEl.classList.toggle('visible', !!msg);
+//     }
+//   }
+
+//   function clearErrors() {
+//     ['name', 'email', 'message'].forEach(f => showFieldError(f, ''));
+//   }
+
+//   function validateForm(data) {
+//     let valid = true;
+//     clearErrors();
+
+//     if (!data.name || data.name.length < 2) {
+//       showFieldError('name', 'Please enter your name (at least 2 characters).');
+//       valid = false;
+//     }
+//     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     if (!data.email || !emailRe.test(data.email)) {
+//       showFieldError('email', 'Please enter a valid email address.');
+//       valid = false;
+//     }
+//     if (!data.message || data.message.length < 10) {
+//       showFieldError('message', 'Message must be at least 10 characters.');
+//       valid = false;
+//     }
+//     return valid;
+//   }
+
+//   form.addEventListener('submit', async (e) => {
+//     e.preventDefault();
+
+//     const data = {
+//       name: form.querySelector('#name').value.trim(),
+//       email: form.querySelector('#email').value.trim(),
+//       message: form.querySelector('#message').value.trim(),
+//     };
+
+//     if (!validateForm(data)) return;
+
+//     // Loading state
+//     submitBtn.classList.add('loading');
+//     submitBtn.disabled = true;
+//     responseEl.className = 'form-response';
+//     responseEl.textContent = '';
+
+//     // Get CSRF token from cookie
+//     function getCookie(name) {
+//       const val = `; ${document.cookie}`;
+//       const parts = val.split(`; ${name}=`);
+//       if (parts.length === 2) return parts.pop().split(';').shift();
+//       return '';
+//     }
+
+//     try {
+//       const res = await fetch('/api/contact/', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'X-CSRFToken': getCookie('csrftoken'),
+//         },
+//         body: JSON.stringify(data),
+//       });
+
+//       const result = await res.json();
+
+//       if (res.ok && result.success) {
+//         responseEl.textContent = '✓ ' + result.message;
+//         responseEl.className = 'form-response success';
+//         form.reset();
+
+//         // Animate success
+//         gsap.fromTo(responseEl, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 });
+
+//         // Reset button state after delay
+//         setTimeout(() => {
+//           submitBtn.classList.remove('loading');
+//           submitBtn.disabled = false;
+//         }, 2000);
+
+//       } else if (result.errors) {
+//         // Field-level errors
+//         Object.entries(result.errors).forEach(([field, msg]) => showFieldError(field, msg));
+//         submitBtn.classList.remove('loading');
+//         submitBtn.disabled = false;
+//       } else {
+//         throw new Error(result.error || 'Unknown error');
+//       }
+
+//     } catch (err) {
+//       responseEl.textContent = '✗ Transmission failed. Please try again or email directly.';
+//       responseEl.className = 'form-response error';
+//       gsap.fromTo(responseEl, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 });
+//       submitBtn.classList.remove('loading');
+//       submitBtn.disabled = false;
+//       console.error('Contact form error:', err);
+//     }
+//   });
+
+//   // Live validation
+//   ['name', 'email', 'message'].forEach(field => {
+//     const input = form.querySelector('#' + field);
+//     if (input) {
+//       input.addEventListener('blur', () => {
+//         const val = input.value.trim();
+//         if (field === 'name' && val.length > 0 && val.length < 2)
+//           showFieldError('name', 'Name too short.');
+//         else if (field === 'email' && val.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
+//           showFieldError('email', 'Please enter a valid email.');
+//         else if (field === 'message' && val.length > 0 && val.length < 10)
+//           showFieldError('message', 'Message is too short.');
+//         else
+//           showFieldError(field, '');
+//       });
+//     }
+//   });
+// })();
+  (function initContactForm() {
   const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('submitBtn');
   const responseEl = document.getElementById('formResponse');
-
   if (!form) return;
 
   function showFieldError(fieldId, msg) {
@@ -603,114 +729,62 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
   }
 
   function clearErrors() {
-    ['name', 'email', 'message'].forEach(f => showFieldError(f, ''));
+    ['name','email','message'].forEach(f => showFieldError(f,''));
   }
 
-  function validateForm(data) {
+  function validateForm(data){
     let valid = true;
     clearErrors();
-
-    if (!data.name || data.name.length < 2) {
-      showFieldError('name', 'Please enter your name (at least 2 characters).');
-      valid = false;
-    }
+    if(!data.name || data.name.length < 2){ showFieldError('name','Please enter your name (min 2 chars)'); valid=false; }
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!data.email || !emailRe.test(data.email)) {
-      showFieldError('email', 'Please enter a valid email address.');
-      valid = false;
-    }
-    if (!data.message || data.message.length < 10) {
-      showFieldError('message', 'Message must be at least 10 characters.');
-      valid = false;
-    }
+    if(!data.email || !emailRe.test(data.email)){ showFieldError('email','Please enter a valid email'); valid=false; }
+    if(!data.message || data.message.length < 10){ showFieldError('message','Message must be at least 10 chars'); valid=false; }
     return valid;
   }
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', async (e)=>{
     e.preventDefault();
-
     const data = {
       name: form.querySelector('#name').value.trim(),
       email: form.querySelector('#email').value.trim(),
-      message: form.querySelector('#message').value.trim(),
+      message: form.querySelector('#message').value.trim()
     };
+    if(!validateForm(data)) return;
 
-    if (!validateForm(data)) return;
-
-    // Loading state
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
     responseEl.className = 'form-response';
     responseEl.textContent = '';
 
-    // Get CSRF token from cookie
-    function getCookie(name) {
-      const val = `; ${document.cookie}`;
-      const parts = val.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-      return '';
-    }
-
     try {
-      const res = await fetch('/api/contact/', {
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('email', data.email);
+      formData.append('message', data.message);
+
+      const res = await fetch('https://formspree.io/f/xgopnbbw', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify(data),
+        body: formData,
+        headers: { 'Accept': 'application/json' }
       });
 
       const result = await res.json();
-
-      if (res.ok && result.success) {
-        responseEl.textContent = '✓ ' + result.message;
+      if(res.ok){
+        responseEl.textContent = '✓ Your message has been transmitted successfully! I will respond within 24 hours.';
         responseEl.className = 'form-response success';
         form.reset();
-
-        // Animate success
-        gsap.fromTo(responseEl, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 });
-
-        // Reset button state after delay
-        setTimeout(() => {
-          submitBtn.classList.remove('loading');
-          submitBtn.disabled = false;
-        }, 2000);
-
-      } else if (result.errors) {
-        // Field-level errors
-        Object.entries(result.errors).forEach(([field, msg]) => showFieldError(field, msg));
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
+        gsap.fromTo(responseEl, {opacity:0,y:-10},{opacity:1,y:0,duration:0.5});
       } else {
-        throw new Error(result.error || 'Unknown error');
+        responseEl.textContent = '✗ Transmission failed. Please try again.';
+        responseEl.className = 'form-response error';
       }
-
-    } catch (err) {
-      responseEl.textContent = '✗ Transmission failed. Please try again or email directly.';
+    } catch(err){
+      responseEl.textContent = '✗ Transmission failed. Please try again.';
       responseEl.className = 'form-response error';
-      gsap.fromTo(responseEl, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 });
+      console.error('Contact form error:', err);
+    } finally {
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
-      console.error('Contact form error:', err);
-    }
-  });
-
-  // Live validation
-  ['name', 'email', 'message'].forEach(field => {
-    const input = form.querySelector('#' + field);
-    if (input) {
-      input.addEventListener('blur', () => {
-        const val = input.value.trim();
-        if (field === 'name' && val.length > 0 && val.length < 2)
-          showFieldError('name', 'Name too short.');
-        else if (field === 'email' && val.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
-          showFieldError('email', 'Please enter a valid email.');
-        else if (field === 'message' && val.length > 0 && val.length < 10)
-          showFieldError('message', 'Message is too short.');
-        else
-          showFieldError(field, '');
-      });
     }
   });
 })();
