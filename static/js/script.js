@@ -729,27 +729,27 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
   }
 
   function clearErrors() {
-    ['name','email','message'].forEach(f => showFieldError(f,''));
+    ['name', 'email', 'message'].forEach(f => showFieldError(f, ''));
   }
 
-  function validateForm(data){
+  function validateForm(data) {
     let valid = true;
     clearErrors();
-    if(!data.name || data.name.length < 2){ showFieldError('name','Please enter your name (min 2 chars)'); valid=false; }
+    if (!data.name || data.name.length < 2) { showFieldError('name', 'Enter your name (min 2 chars)'); valid = false; }
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!data.email || !emailRe.test(data.email)){ showFieldError('email','Please enter a valid email'); valid=false; }
-    if(!data.message || data.message.length < 10){ showFieldError('message','Message must be at least 10 chars'); valid=false; }
+    if (!data.email || !emailRe.test(data.email)) { showFieldError('email', 'Enter a valid email'); valid = false; }
+    if (!data.message || data.message.length < 10) { showFieldError('message', 'Message must be at least 10 chars'); valid = false; }
     return valid;
   }
 
-  form.addEventListener('submit', async (e)=>{
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const data = {
       name: form.querySelector('#name').value.trim(),
       email: form.querySelector('#email').value.trim(),
       message: form.querySelector('#message').value.trim()
     };
-    if(!validateForm(data)) return;
+    if (!validateForm(data)) return;
 
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
@@ -765,21 +765,27 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
       const res = await fetch('https://formspree.io/f/xgopnbbw', {
         method: 'POST',
         body: formData,
-        headers: { 'Accept': 'application/json' }
+        headers: {
+          'Accept': 'application/json'
+        }
       });
 
       const result = await res.json();
-      if(res.ok){
-        responseEl.textContent = '✓ Your message has been transmitted successfully! I will respond within 24 hours.';
+
+      if (res.ok) {
+        responseEl.textContent = '✓ Message sent successfully!';
         responseEl.className = 'form-response success';
         form.reset();
-        gsap.fromTo(responseEl, {opacity:0,y:-10},{opacity:1,y:0,duration:0.5});
+      } else if (result.errors) {
+        result.errors.forEach(err => {
+          if (err.field && err.message) showFieldError(err.field, err.message);
+        });
       } else {
-        responseEl.textContent = '✗ Transmission failed. Please try again.';
-        responseEl.className = 'form-response error';
+        throw new Error('Unknown error');
       }
-    } catch(err){
-      responseEl.textContent = '✗ Transmission failed. Please try again.';
+
+    } catch (err) {
+      responseEl.textContent = '✗ Transmission failed. Please try again or email directly.';
       responseEl.className = 'form-response error';
       console.error('Contact form error:', err);
     } finally {
