@@ -27,36 +27,26 @@ def contact_api(request):
     POST /api/contact/
     Body: { "name": "...", "email": "...", "message": "..." }
     """
+    import json, re
+    from django.core.mail import send_mail
+    from django.conf import settings
+    from .models import ContactMessage
+
     try:
         data = json.loads(request.body)
         name = data.get('name', '').strip()
         email = data.get('email', '').strip()
         message = data.get('message', '').strip()
 
-        # Validation
-        errors = {}
-        if not name or len(name) < 2:
-            errors['name'] = 'Name must be at least 2 characters.'
-        if len(name) > 200:
-            errors['name'] = 'Name is too long.'
+        # Simple validation
+        if not name or not email or not message:
+            return JsonResponse({'success': False, 'error': 'All fields are required.'}, status=400)
 
-        email_regex = r'^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$'
-        if not email or not re.match(email_regex, email):
-            errors['email'] = 'Please provide a valid email address.'
-
-        if not message or len(message) < 10:
-            errors['message'] = 'Message must be at least 10 characters.'
-        if len(message) > 5000:
-            errors['message'] = 'Message is too long (max 5000 characters).'
-
-        if errors:
-            return JsonResponse({'success': False, 'errors': errors}, status=400)
-
-        # Get IP address
+        # Get IP
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
-        # Save to database
+        # Save message
         contact_msg = ContactMessage.objects.create(
             name=name,
             email=email,
@@ -64,19 +54,18 @@ def contact_api(request):
             ip_address=ip,
         )
 
-        # Send email notification
+        # Send email safely
         try:
             send_mail(
                 subject=f"New Contact Form Submission from {name}",
                 message=f"Name: {name}\nEmail: {email}\nIP: {ip}\n\nMessage:\n{message}",
                 from_email=settings.EMAIL_HOST_USER,
-                recipient_list=['lekhansimhap@gmail.com'],
-                fail_silently=False,  # set True if you want errors not to break API
+                recipient_list=[settings.EMAIL_HOST_USER],
+                fail_silently=False,  # will throw if Gmail rejects
             )
         except Exception as e:
-            print(f"Email send failed: {e}")  # logs email failures
+            print(f"Email sending failed: {e}")
 
-        # Return success JSON
         return JsonResponse({
             'success': True,
             'message': 'Your message has been transmitted successfully! I will respond within 24 hours.',
@@ -86,8 +75,69 @@ def contact_api(request):
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'error': 'Invalid JSON payload.'}, status=400)
     except Exception as e:
-        print(f"Server error: {e}")  # log for debugging
+        print(f"Server error: {e}")
         return JsonResponse({'success': False, 'error': 'Server error. Please try again.'}, status=500)
+    # try:
+    #     data = json.loads(request.body)
+    #     name = data.get('name', '').strip()
+    #     email = data.get('email', '').strip()
+    #     message = data.get('message', '').strip()
+
+    #     # Validation
+    #     errors = {}
+    #     if not name or len(name) < 2:
+    #         errors['name'] = 'Name must be at least 2 characters.'
+    #     if len(name) > 200:
+    #         errors['name'] = 'Name is too long.'
+
+    #     email_regex = r'^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$'
+    #     if not email or not re.match(email_regex, email):
+    #         errors['email'] = 'Please provide a valid email address.'
+
+    #     if not message or len(message) < 10:
+    #         errors['message'] = 'Message must be at least 10 characters.'
+    #     if len(message) > 5000:
+    #         errors['message'] = 'Message is too long (max 5000 characters).'
+
+    #     if errors:
+    #         return JsonResponse({'success': False, 'errors': errors}, status=400)
+
+    #     # Get IP address
+    #     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    #     ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
+
+    #     # Save to database
+    #     contact_msg = ContactMessage.objects.create(
+    #         name=name,
+    #         email=email,
+    #         message=message,
+    #         ip_address=ip,
+    #     )
+
+    #     # Send email notification
+    #     try:
+    #         send_mail(
+    #             subject=f"New Contact Form Submission from {name}",
+    #             message=f"Name: {name}\nEmail: {email}\nIP: {ip}\n\nMessage:\n{message}",
+    #             from_email=settings.EMAIL_HOST_USER,
+    #             recipient_list=['lekhansimhap@gmail.com'],
+    #             fail_silently=False,  # set True if you want errors not to break API
+    #         )
+    #     except Exception as e:
+    #         print(f"Email send failed: {e}")  # logs email failures
+
+    #     # Return success JSON
+    #     return JsonResponse({
+    #         'success': True,
+    #         'message': 'Your message has been transmitted successfully! I will respond within 24 hours.',
+    #         'id': contact_msg.id,
+    #     }, status=201)
+
+    # except json.JSONDecodeError:
+    #     return JsonResponse({'success': False, 'error': 'Invalid JSON payload.'}, status=400)
+    # except Exception as e:
+    #     print(f"Server error: {e}")  # log for debugging
+    #     return JsonResponse({'success': False, 'error': 'Server error. Please try again.'}, status=500)
 
 
 def projects_api(request):
